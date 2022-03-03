@@ -3,22 +3,23 @@ package com.example.weatherbot.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "Chat")
+@Table(name = "\"Chat\"", schema = "schema_name")
 public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ChatId")
+    @Column(name = "\"chatId\"")
     private Long chatId;
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @Column(name = "CityId")
-//    private List<City> city;
+    @OneToMany(fetch = FetchType.LAZY)
+    @Column(name = "cityId")
+    private List<City> city;
 
     public Chat(){
     }

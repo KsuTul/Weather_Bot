@@ -15,12 +15,10 @@ import java.util.List;
 public class BotService {
     private final WeatherService weatherService;
     private final CommandParser commandParser;
-    @Autowired
-    private ChatRepository chatRepository;
+
     @Autowired
     private CityRepository cityRepository;
 
-    private final List<String> cities = new ArrayList<>();
     private String active;
 
     public BotService(WeatherService weatherService, CommandParser parser) {

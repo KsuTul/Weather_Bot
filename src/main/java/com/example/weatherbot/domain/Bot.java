@@ -13,7 +13,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-@Component
+@Component 
 public class Bot extends TelegramLongPollingBot {
 
     @Autowired
@@ -46,7 +46,7 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         var chatId = update.getMessage().getChatId();
-        var chat = chatRepository.getChatByChatId();
+        var chat = chatRepository.getChatByChatId(chatId);
         if(chat == null){
             chatRepository.save(new Chat(chatId));
         }
