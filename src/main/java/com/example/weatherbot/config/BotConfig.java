@@ -3,6 +3,7 @@ package com.example.weatherbot.config;
 import com.example.weatherbot.domain.Bot;
 import com.example.weatherbot.parser.CommandParser;
 import com.example.weatherbot.services.BotService;
+import com.example.weatherbot.services.KeyboardService;
 import com.example.weatherbot.services.WeatherService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -85,8 +87,13 @@ public class BotConfig {
     }
 
     @Bean
+    public KeyboardService keyboardService(){
+        return new KeyboardService(new InlineKeyboardMarkup());
+    }
+
+    @Bean
     public BotService botService() {
-        return new BotService(weatherService(), commandParser());
+        return new BotService(weatherService(), commandParser(), keyboardService());
     }
 
     @Bean

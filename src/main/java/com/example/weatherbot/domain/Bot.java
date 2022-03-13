@@ -45,17 +45,21 @@ public class Bot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        var chatId = update.getMessage().getChatId();
-        var chat = chatRepository.getChatByChatId(chatId);
-        if(chat == null){
-            chatRepository.save(new Chat(chatId));
+        SendMessage message;
+        if(update.hasCallbackQuery()){
+            message = new SendMessage();
+            message.setText(update.getCallbackQuery().getData());
+            message.setChatId(String.valueOf(update.getCallbackQuery().getMessage().getChatId()));
+        }else{
+            var chatId = update.getMessage().getChatId();
+            var chat = chatRepository.getChatByChatId(chatId);
+            if(chat == null){
+                chatRepository.save(new Chat(chatId));
+            }
+            var text = update.getMessage().getText();
+            message = botService.handleMessage(text, chatId);
+            message.setChatId(String.valueOf(chatId));
         }
-
-        var text = update.getMessage().getText();
-
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(botService.handleMessage(text));
         try{
             execute(message);
         }catch(TelegramApiException ex){

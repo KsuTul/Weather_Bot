@@ -20,9 +20,7 @@ public class CallbackAnswear {
 
         try {
             telegramApiClient.send(telegramApiClientCallbackAnswearReq, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

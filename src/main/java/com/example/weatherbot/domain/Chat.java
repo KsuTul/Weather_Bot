@@ -3,6 +3,7 @@ package com.example.weatherbot.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -17,8 +18,7 @@ public class Chat {
     @Column(name = "\"chatId\"")
     private Long chatId;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @Column(name = "cityId")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chat")
     private List<City> city;
 
     public Chat(){
@@ -26,6 +26,6 @@ public class Chat {
 
     public Chat(Long chatId){
         this.chatId = chatId;
-        //this.city = new ArrayList<>();
+        this.city = new ArrayList<>();
     }
 }

@@ -7,6 +7,8 @@ import com.example.weatherbot.repository.ChatRepository;
 import com.example.weatherbot.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,40 +17,45 @@ import java.util.List;
 public class BotService {
     private final WeatherService weatherService;
     private final CommandParser commandParser;
+    private final KeyboardService keyboardService;
 
     @Autowired
     private CityRepository cityRepository;
 
     private String active;
 
-    public BotService(WeatherService weatherService, CommandParser parser) {
+    public BotService(WeatherService weatherService, CommandParser parser, KeyboardService keyboardService) {
         this.weatherService = weatherService;
         this.commandParser = parser;
+        this.keyboardService = keyboardService;
     }
 
-    public String handleMessage(String text) {
+    public SendMessage handleMessage(String text, Long chatId) {
         var commands = commandParser.getCommand(text);
+        SendMessage message = new SendMessage();
         for (var command : commands.entrySet()) {
             switch (command.getKey()) {
                 case WEATHER:
-                    return weather();
+                    message.setText("Выберете город");
+                    message.setReplyMarkup(weather(chatId));
                 case CITY:
-                    return "Введите город";
+                   // return "Введите город";
                 case SET_CITY:
-                    return setCity(command.getValue());
+                   // return setCity(command.getValue());
                 case DAYS:
-                    return "Введите количество дней";
+                   // return "Введите количество дней";
                 case SET_DAYS:
-                    return setDays(Integer.parseInt(command.getValue()));
+                   // return setDays(Integer.parseInt(command.getValue()));
 
             }
         }
-        return "Не понял команды";
+        return message;
+     //   return "Не понял команды";
     }
 
     // будет функционал кнопок
-    private String weather() {
-        return "Введите город";
+    private InlineKeyboardMarkup weather(Long chatId) {
+        return keyboardService.setChooseCityKeyboard(chatId) ;
     }
 
     private String setCity(String city) {
