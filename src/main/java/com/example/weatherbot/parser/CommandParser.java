@@ -11,7 +11,6 @@ import java.util.Map;
 @Component
 public class CommandParser {
     private static final String COMMAND_SIGN = "/";
-    private Command activeCommand;
 
     @Autowired
     private final WeatherService weatherService;
@@ -21,18 +20,19 @@ public class CommandParser {
     }
 
     public Map<Command, String> getCommand(String text) {
-        Command command = Command.NOT_FOUND;
+        Command command;
         var result = new HashMap<Command, String>();
         if (text.startsWith(COMMAND_SIGN)) {
-            var commandText = text.substring(text.indexOf(COMMAND_SIGN) + 1);
+            text = text.replaceAll("\\s+", " ").trim();
+            var commandText = text.contains(" ") ? text.substring(text.indexOf(COMMAND_SIGN) + 1, text.indexOf(" "))
+                    : text.substring(text.indexOf(COMMAND_SIGN) + 1);
             command = Command.valueOfWithIgnoreCase(commandText);
-            activeCommand = command;
             result.put(command, "");
         }
-        if (weatherService.isCityExist(text) && activeCommand == Command.CITY) {
+        if (weatherService.isCityExist(text)) {
             result.put(Command.SET_CITY, text);
         }
-        if (isNumber(text) && activeCommand == Command.DAYS) {
+        if (isNumber(text)) {
             result.put(Command.SET_DAYS, text);
         }
 

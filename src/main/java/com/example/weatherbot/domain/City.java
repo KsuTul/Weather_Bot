@@ -16,12 +16,13 @@ public class City {
     @Column(name = "\"city\"")
     private String city;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "\"chatId\"")
+    @ManyToOne
+    @JoinColumn(name = "\"chatId\"", insertable = false, updatable = false)
     private Chat chat;
 
-    public City(String city){
+    public City(String city, Chat chat){
         this.city = city;
+        this.chat = chat;
     }
 
     public City() {

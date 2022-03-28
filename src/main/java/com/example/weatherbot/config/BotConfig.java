@@ -79,16 +79,17 @@ public class BotConfig {
     private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", env.getProperty("spring.jpa.database-platform"));
+        properties.setProperty("show.sql", env.getProperty("spring.jpa.show-sql"));
         return properties;
     }
     @Bean
     public WeatherService weatherService() {
-        return new WeatherService(Logger.getLogger(WeatherService.class));
+        return new WeatherService( weatherConfig());
     }
 
     @Bean
     public KeyboardService keyboardService(){
-        return new KeyboardService(new InlineKeyboardMarkup());
+        return new KeyboardService(new InlineKeyboardMarkup(), weatherService());
     }
 
     @Bean
@@ -104,6 +105,11 @@ public class BotConfig {
     @Bean
     public CommandParser commandParser() {
         return new CommandParser(weatherService());
+    }
+
+    @Bean
+    public WeatherConfig weatherConfig(){
+        return new WeatherConfig();
     }
 
 }

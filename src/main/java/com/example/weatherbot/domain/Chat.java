@@ -18,8 +18,8 @@ public class Chat {
     @Column(name = "\"chatId\"")
     private Long chatId;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "chat")
-    private List<City> city;
+    @OneToMany(fetch = FetchType.LAZY,  mappedBy = "chat", cascade = CascadeType.MERGE)
+    private List<City> city = new ArrayList<>();
 
     public Chat(){
     }
